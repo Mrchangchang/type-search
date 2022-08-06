@@ -1,0 +1,11 @@
+{
+  "logo": "./src/typescript.png",
+  "features": [
+    {
+      "code": "type",
+      "explain": "查找具有类型的npm包",
+      "cmds": ["type"]
+    }
+  ],
+  "preload": "./src/preload.js"
+}
