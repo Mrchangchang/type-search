@@ -1,3 +1,4 @@
+const { Notification } = require('electron')
 const searchParams = new URLSearchParams({
   'x-algolia-agent': 'TS DT Fetch',
   'x-algolia-application-id': 'OFCNCOG2CU',
@@ -8,18 +9,18 @@ const abort = new AbortController()
 
 const cache = new Map()
 const randomQuery = [
-  "react",
-  "express",
-  "lodash",
-  "preact",
-  "lambda",
-  "jest",
-  "danger",
-  "ember",
-  "vue",
-  "svelte",
-  "node",
-  "ASP",
+  'react',
+  'express',
+  'lodash',
+  'preact',
+  'lambda',
+  'jest',
+  'danger',
+  'ember',
+  'vue',
+  'svelte',
+  'node',
+  'ASP',
 ]
 const createPostData = (requestedSearch) => {
   const search =
@@ -60,9 +61,9 @@ const createPostData = (requestedSearch) => {
   }
 }
 const Installers = {
-  npm: ["npm i", "--save-dev"],
-  yarn: ["yarn add", "--dev"],
-  pnpm: ["pnpm add", "--save-dev"]
+  npm: ['npm i', '--save-dev'],
+  yarn: ['yarn add', '--dev'],
+  pnpm: ['pnpm add', '--save-dev'],
 }
 const getResultList = (list = []) => {
   const installer = Installers.yarn
@@ -70,17 +71,19 @@ const getResultList = (list = []) => {
     const { name, description, types = {} } = v
     const npmUrl = `https://www.npmjs.com/package/${name}`
     const installCommands = [`${installer[0]} ${name}`]
-    if (types.ts === "definitely-typed") {
+    if (types.ts === 'definitely-typed') {
       installCommands.push(
         `${installer[0]} ${types.definitelyTyped} ${installer[1]}`
       )
     }
     return {
       title: name,
-      description: `${description}\n（选择复制：${installCommands.join(' && ')}）`,
+      description: `${description}\n（选择复制：${installCommands.join(
+        ' && '
+      )}）`,
       icon: 'https://files.catbox.moe/tur943.png',
       url: npmUrl,
-      installCommands: installCommands.join(' && ')
+      installCommands: installCommands.join(' && '),
     }
   })
 }
@@ -97,7 +100,7 @@ window.exports = {
             title: 'Type Search',
             description: '搜索npm包类型',
             icon: '', // 图标(可选)
-            url: 'https://www.typescriptlang.org/dt/search?search='
+            url: 'https://www.typescriptlang.org/dt/search?search=',
           },
         ])
       },
@@ -125,8 +128,6 @@ window.exports = {
           // 执行 callbackSetList 显示出来
           callbackSetList(getResultList(processedResult.hits))
         })
-        
-        
       },
       // 用户选择列表中某个条目时被调用
       select: (action, itemData, callbackSetList) => {
@@ -134,13 +135,16 @@ window.exports = {
         const installCommands = itemData.installCommands
         const url = itemData.url
         if (installCommands) {
+          /** 复制命令 */
           utools.copyText(installCommands)
+          /** 通知 */
+          utools.showNotification('复制成功')
         } else {
           utools.shellOpenExternal(url)
         }
         window.utools.outPlugin()
-     },
-     placeholder: 'Type Search'
+      },
+      placeholder: 'Type Search',
     },
   },
 }
